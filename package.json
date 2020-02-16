@@ -1,0 +1,15 @@
+{
+  "name": "rpi-keypad",
+  "version": "1.0.0",
+  "description": "a simple matrix keypad library for the raspberry pi",
+  "main": "index.js",
+  "dependencies": {
+    "rpio": "^2.1.1",
+    "@types/rpio": "^0.0.3"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "AlexKutschera",
+  "license": "MIT"
+}
