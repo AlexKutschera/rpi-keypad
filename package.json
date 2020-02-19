@@ -1,6 +1,6 @@
 {
   "name": "rpi-keypad",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "a simple matrix keypad library for the raspberry pi",
   "main": "index.js",
   "dependencies": {
