@@ -7,6 +7,7 @@ export default class Keypad extends EventEmitter{
     private rows: number[];
     private cols: number[];
     private lastKey: string;
+    private pullInterval: null|number=null;
 
     /***
      * initializes keypad
@@ -14,11 +15,12 @@ export default class Keypad extends EventEmitter{
      * @param rows - array of row GPIO pins
      * @param cols - array of column GPIO pins
      */
-    constructor(keys: string[][], rows: number[], cols: number[]) {
+    constructor(keys: string[][], rows: number[], cols: number[], enableEvents: boolean = false, pullRate: number = 100) {
         super();
         this.keys = keys;
         this.rows = rows;
         this.cols = cols;
+        this.enableEvents(enableEvents,pullRate);
     }
 
     /**
@@ -71,6 +73,16 @@ export default class Keypad extends EventEmitter{
         let actualKey=this.getKey();
         if(actualKey!==null){
             this.emit("keypress",actualKey);
+        }
+    }
+
+    enableEvents(enable:boolean,pullRate:number=100){
+        if(this.pullInterval!==null){
+            clearInterval(this.pullInterval);
+            this.pullInterval=null;
+        }
+        if(enable){
+            this.pullInterval=setInterval(this.autoGetKey,pullRate);
         }
     }
 
