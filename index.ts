@@ -1,6 +1,7 @@
 import {open, close, read, INPUT, OUTPUT, LOW, HIGH, PULL_UP, PULL_DOWN} from "rpio";
+import EventEmitter from "events";
 
-export default class Keypad {
+export default class Keypad extends EventEmitter{
 
     private keys: string[][];
     private rows: number[];
@@ -14,6 +15,7 @@ export default class Keypad {
      * @param cols - array of column GPIO pins
      */
     constructor(keys: string[][], rows: number[], cols: number[]) {
+        super();
         this.keys = keys;
         this.rows = rows;
         this.cols = cols;
@@ -63,6 +65,13 @@ export default class Keypad {
         if (checkLast && this.lastKey == this.keys[rowValue][colValue]) return null;
         this.lastKey = this.keys[rowValue][colValue];
         return this.keys[rowValue][colValue];
+    }
+
+    autoGetKey(){
+        let actualKey=this.getKey();
+        if(actualKey!==null){
+            this.emit("keypress",actualKey);
+        }
     }
 
     private exit() {
