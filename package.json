@@ -5,7 +5,8 @@
   "main": "index.js",
   "dependencies": {
     "rpio": "^2.1.1",
-    "@types/rpio": "^0.0.3"
+    "@types/rpio": "^0.0.3",
+    "@types/node": "^13.7.4"
   },
   "repository": {
     "url": "https://github.com/AlexKutschera/rpi-keypad"

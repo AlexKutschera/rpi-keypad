@@ -1,26 +1,28 @@
 import {open, close, read, INPUT, OUTPUT, LOW, HIGH, PULL_UP, PULL_DOWN} from "rpio";
-import EventEmitter from "events";
+import {EventEmitter} from "events";
 
-export default class Keypad extends EventEmitter{
+export default class Keypad extends EventEmitter {
 
     private keys: string[][];
     private rows: number[];
     private cols: number[];
     private lastKey: string;
-    private pullInterval: null|number=null;
+    private pullInterval: any = null;
 
     /***
      * initializes keypad
      * @param keys - matrix of keys on keypad
      * @param rows - array of row GPIO pins
      * @param cols - array of column GPIO pins
+     * @param enableEvents - automatic polling handled by Keypad class, use
+     * @param pullRate - to set polling interval
      */
     constructor(keys: string[][], rows: number[], cols: number[], enableEvents: boolean = false, pullRate: number = 100) {
         super();
         this.keys = keys;
         this.rows = rows;
         this.cols = cols;
-        this.enableEvents(enableEvents,pullRate);
+        this.enableEvents(enableEvents, pullRate);
     }
 
     /**
@@ -69,20 +71,18 @@ export default class Keypad extends EventEmitter{
         return this.keys[rowValue][colValue];
     }
 
-    autoGetKey(){
-        let actualKey=this.getKey();
-        if(actualKey!==null){
-            this.emit("keypress",actualKey);
-        }
-    }
-
-    enableEvents(enable:boolean,pullRate:number=100){
-        if(this.pullInterval!==null){
+    enableEvents(enable: boolean, pullRate: number = 100) {
+        if (this.pullInterval !== null) {
             clearInterval(this.pullInterval);
-            this.pullInterval=null;
+            this.pullInterval = null;
         }
-        if(enable){
-            this.pullInterval=setInterval(this.autoGetKey,pullRate);
+        if (enable) {
+            this.pullInterval = setInterval(() => {
+                let actualKey = this.getKey();
+                if (actualKey !== null) {
+                    this.emit("keypress", actualKey);
+                }
+            }, pullRate);
         }
     }
 

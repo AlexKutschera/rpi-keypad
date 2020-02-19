@@ -1,17 +1,40 @@
 "use strict";
-exports.__esModule = true;
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
 var rpio_1 = require("rpio");
-var Keypad = /** @class */ (function () {
+var events_1 = require("events");
+var Keypad = /** @class */ (function (_super) {
+    __extends(Keypad, _super);
     /***
      * initializes keypad
      * @param keys - matrix of keys on keypad
      * @param rows - array of row GPIO pins
      * @param cols - array of column GPIO pins
+     * @param enableEvents - automatic polling handled by Keypad class, use
+     * @param pullRate - to set polling interval
      */
-    function Keypad(keys, rows, cols) {
-        this.keys = keys;
-        this.rows = rows;
-        this.cols = cols;
+    function Keypad(keys, rows, cols, enableEvents, pullRate) {
+        if (enableEvents === void 0) { enableEvents = false; }
+        if (pullRate === void 0) { pullRate = 100; }
+        var _this = _super.call(this) || this;
+        _this.pullInterval = null;
+        _this.keys = keys;
+        _this.rows = rows;
+        _this.cols = cols;
+        _this.enableEvents(enableEvents, pullRate);
+        return _this;
     }
     /**
      * get currently pressed key
@@ -57,6 +80,22 @@ var Keypad = /** @class */ (function () {
         this.lastKey = this.keys[rowValue][colValue];
         return this.keys[rowValue][colValue];
     };
+    Keypad.prototype.enableEvents = function (enable, pullRate) {
+        var _this = this;
+        if (pullRate === void 0) { pullRate = 100; }
+        if (this.pullInterval !== null) {
+            clearInterval(this.pullInterval);
+            this.pullInterval = null;
+        }
+        if (enable) {
+            this.pullInterval = setInterval(function () {
+                var actualKey = _this.getKey();
+                if (actualKey !== null) {
+                    _this.emit("keypress", actualKey);
+                }
+            }, pullRate);
+        }
+    };
     Keypad.prototype.exit = function () {
         this.rows.forEach(function (value) {
             rpio_1.close(value);
@@ -66,5 +105,5 @@ var Keypad = /** @class */ (function () {
         });
     };
     return Keypad;
-}());
-exports["default"] = Keypad;
+}(events_1.EventEmitter));
+exports.default = Keypad;
