@@ -25,7 +25,7 @@ var input = new Keypad(
     ],                  // keypad layout
     [40, 38, 36, 32],   // row GPIO pins
     [37, 35, 33, 31],   // colum GPIO pins
-    // additional
+    // additional:
     true,               // use key press events
     100                 // interval in ms to poll for key events
 );
