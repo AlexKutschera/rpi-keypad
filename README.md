@@ -10,6 +10,7 @@ npm i rpi-keypad
 typescript usage
 ```typescript
 import Keypad from "rpi-keypad";
+...
 ```
 javascript usage
 ```javascript
@@ -21,11 +22,14 @@ var input = new Keypad(
         ["4", "5", "6", "B"],
         ["7", "8", "9", "C"],
         ["*", "0", "#", "D"],
-    ],                // keypad layout
-    [40, 38, 36, 32], // row GPIO pins
-    [37, 35, 33, 31]  // colum GPIO pins
+    ],                  // keypad layout
+    [40, 38, 36, 32],   // row GPIO pins
+    [37, 35, 33, 31],   // colum GPIO pins
+    enableEvents,       // use key press events
+    pullRate            // interval to poll for key events
 );
     
+// using own polling
 setInterval(() => {
     var key = keypad.getKey();
     if (key != null){
@@ -34,4 +38,9 @@ setInterval(() => {
         console.log("no key pressed");
     }
 }, 100);
+
+// using events
+keypad.on("keypress", (key) => {
+    console.log("key pressed: " + key);
+})
 ```
