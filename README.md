@@ -14,9 +14,9 @@ import Keypad from "rpi-keypad";
 ```
 javascript usage
 ```javascript
-var Keypad = require("rpi-keypad");
+const Keypad = require("rpi-keypad");
 
-var input = new Keypad(
+const input = new Keypad.default(
     [
         ["1", "2", "3", "A"],
         ["4", "5", "6", "B"],
@@ -32,7 +32,7 @@ var input = new Keypad(
     
 // using own polling
 setInterval(() => {
-    var key = keypad.getKey();
+    const key = input.getKey();
     if (key != null){
         console.log("key pressed: " + key);
     } else {
@@ -41,7 +41,7 @@ setInterval(() => {
 }, 100);
 
 // using events
-keypad.on("keypress", (key) => {
+input.on("keypress", (key) => {
     console.log("key pressed: " + key);
 })
 ```
